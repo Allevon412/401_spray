@@ -183,8 +183,10 @@ if __name__ == "__main__":
         print("[+] Avg time: " + str(avg_time))
         thresh = avg_time * 0.6
         print("[*] Threshold: " + str(thresh))
+        if opts.domain != "":
+            domain = opts.domain
 
-        attempts = [(opts.url, opts.domain, u, passwords[0], opts.authtype, proxies, opts.add_response, thresh) for u in usernames]
+        attempts = [(opts.url, domain, u, passwords[0], opts.authtype, proxies, opts.add_response, thresh) for u in usernames]
         with Pool(opts.threads) as p:
             for s in p.imap_unordered(check_username, attempts):
 
@@ -199,7 +201,7 @@ if __name__ == "__main__":
         i = 0
         for p in passwords:
             i += 1
-            attempts = [(opts.url, opts.domain, u, p, opts.authtype, proxies, opts.add_response) for u in valid_users]
+            attempts = [(opts.url, domain, u, p, opts.authtype, proxies, opts.add_response) for u in valid_users]
             with Pool(opts.threads) as p:
                 for s in p.imap_unordered(check_creds, attempts):
                     if s:
