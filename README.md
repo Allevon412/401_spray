@@ -29,7 +29,7 @@ optional arguments:
   -c, --check_creds     Runs the password spraying attack
 ```
 
-###Example output:
+Example output:
 ```Python
 New password spraying run
 Spraying 1 passwords, then sleeping for 120.
