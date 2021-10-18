@@ -198,6 +198,9 @@ if __name__ == "__main__":
         for user in valid_users:
             valid_users_file.write(user + "\n")
 
+        print(f"{str(datetime.now())} Sleeping for {opts.interval} minutes.")
+        sleep(opts.interval * 60)
+
         i = 0
         for p in passwords:
             i += 1
