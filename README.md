@@ -1,5 +1,12 @@
 # 401_spray
-password spraying tool that will check for username validation using the Microsoft CAS timing vulnerability found on endpoints using NTLM authentication. Original code can be found here: https://github.com/fang0654/401_spraying. Simply added the ability to check your username list for valid entries.
+password spraying tool that will check for username validation using the Microsoft CAS timing vulnerability found on endpoints using NTLM authentication. Original code can be found here: https://github.com/fang0654/401_spraying. 
+Simply added the following abilities to the original code:
+1) to check your username list for valid entries.
+2) Obtain the internal domain name tied to the NTLM Authentication using the WWW-Authenticate Header (Only tried this with one target, your milage may vary).
+3) Runs the password spraying attack using usernames identified as valid.
+4) Seperates the password spraying attack and username validation using the -v and -c flags. 
+5) Added some additional flag options so the user isn't forced to use --threads for example (-t can be used).
+
 
 ```python
 usage: 401_spray.py [-h] -u USERNAMES -p PASSWORDS [-d DOMAIN] -U URL [-a ATTEMPTS] [-i INTERVAL] [--authtype {ntlm,basic}] [--proxy PROXY] [-t THREADS] [-o OUTPUT] [--add_response] [-v] [-c]
