@@ -1,7 +1,7 @@
 # 401_spray
 password spraying tool that will check for username validation using the Microsoft CAS timing vulnerability found on endpoints using NTLM authentication. Original code can be found here: https://github.com/fang0654/401_spraying. Simply added the ability to check your username list for valid entries.
 
-
+```python
 usage: 401_spray.py [-h] -u USERNAMES -p PASSWORDS [-d DOMAIN] -U URL [-a ATTEMPTS] [-i INTERVAL] [--authtype {ntlm,basic}] [--proxy PROXY] [-t THREADS] [-o OUTPUT] [--add_response] [-v] [-c]
 
 optional arguments:
@@ -37,4 +37,4 @@ URL: https://autodiscover.<target>.com/autodiscover/autodiscover.xml
 [+] auth creds: <target>\ccccccz, time elapsed: 0:00:07.896346
 [+] Avg time: 0:00:05.131592
 [*] Threshold: 0:00:03.078955
-
+```
