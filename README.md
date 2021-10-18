@@ -27,8 +27,10 @@ optional arguments:
   --add_response        Add response times to output
   -v, --validate_users  Validates the list of usernames. By default will also run password spraying attack.
   -c, --check_creds     Runs the password spraying attack
-  
-  Example output:
+```
+
+###Example output:
+```Python
 New password spraying run
 Spraying 1 passwords, then sleeping for 120.
 URL: https://autodiscover.<target>.com/autodiscover/autodiscover.xml
