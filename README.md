@@ -7,6 +7,9 @@ Simply added the following abilities to the original code:
 4) Seperates the password spraying attack and username validation using the -v and -c flags. 
 5) Added some additional flag options so the user isn't forced to use --threads for example (-t can be used).
 
+Why the timing attack? If you have a list of 250,000 potnetial users and only 1000 of them are actually valid, why password spray against all 250,000. That's why timing attack. Thank you Microsoft for this glorious "Feature".
+
+Why make the tool at all? Thanks to how the NTLM Authentication challenge -> response works, we can't do the cheesy stuff like burp turbo intruder against these endpoints. This tool solves that problem.
 
 ```python
 usage: 401_spray.py [-h] -u USERNAMES -p PASSWORDS [-d DOMAIN] -U URL [-a ATTEMPTS] [-i INTERVAL] [--authtype {ntlm,basic}] [--proxy PROXY] [-t THREADS] [-o OUTPUT] [--add_response] [-v] [-c]
