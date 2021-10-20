@@ -57,10 +57,10 @@ URL: https://autodiscover.<target>/autodiscover/autodiscover.xml
 [+] auth creds: domain\ccccccz, time elapsed: 0:00:15.460272
 [+] Avg time: 0:00:13.829495
 [*] Threshold: 0:00:08.297697
-[+] VALID USER FOUND: domain\JS2563, time elapsed: 0:00:00.522217
-[+] VALID USER FOUND: domain\JS2661, time elapsed: 0:00:00.404065
-[+] VALID USER FOUND: domain\JS2756, time elapsed: 0:00:00.430944
-[+] VALID USER FOUND: domain\JS4491, time elapsed: 0:00:00.422542
-[+] VALID USER FOUND: domain\JS4541, time elapsed: 0:00:00.411033
-[+] VALID USER FOUND: domain\JS5517, time elapsed: 0:00:00.642477
+[+] VALID USER FOUND: domain\user1, time elapsed: 0:00:00.522217
+[+] VALID USER FOUND: domain\user2, time elapsed: 0:00:00.404065
+[+] VALID USER FOUND: domain\user3, time elapsed: 0:00:00.430944
+[+] VALID USER FOUND: domain\user4, time elapsed: 0:00:00.422542
+[+] VALID USER FOUND: domain\user5, time elapsed: 0:00:00.411033
+[+] VALID USER FOUND: domain\user6, time elapsed: 0:00:00.642477
 ```
