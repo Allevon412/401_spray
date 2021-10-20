@@ -36,12 +36,12 @@ def check_creds(opts):
 
         if res.status_code != 401:
             if track_time:
-                print(f"Success! {username}:{password}")
+                print(f"Success! {username}:{password} " + str(res.elapsed))
             else:
                 print(f"Success! {username}:{password}")
             return username, password
         elif track_time:
-            print(f"Fail:  {username}:{password}")
+            print(f"Fail:  {username}:{password} " + str(res.elapsed))
 
     except Exception as e:
         print(f"Error occurred with {username}:{password}: {e}")
@@ -98,7 +98,7 @@ def check_username(opts):
         if res.status_code != 401:
             print("[!!] VALID CREDS FOUND: %s\\%s:%s, time elapsed: " % (domain, username, password) + str(res.elapsed))
             return username,password
-            
+
     elif res.elapsed > thresh:
         #print("[-] INVALID USER: %s\\%s, time elapsed: " % (domain, username) + str(res.elapsed), flush=True)
         return
