@@ -1,5 +1,7 @@
 # 401_spray
 password spraying tool that will check for username validation using the Microsoft CAS timing vulnerability found on endpoints using NTLM authentication. Original code can be found here: https://github.com/fang0654/401_spraying. 
+The program follows a lot of the "logic" used in https://github.com/dafthack/MailSniper to determine which usernames are valid.
+
 Simply added the following abilities to the original code:
 1) to check your username list for valid entries.
 2) Obtain the internal domain name tied to the NTLM Authentication using the WWW-Authenticate Header (Only tried this with one target, your milage may vary).
